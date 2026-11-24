@@ -1,0 +1,6 @@
+backend/
+atlas-src/
+.next/
+node_modules/
+.claude/
+*.tsbuildinfo
