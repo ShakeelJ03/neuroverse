@@ -1,0 +1,24 @@
+NEUROVERSE atlas assets — derived data
+
+These files were derived by scripts/build-atlas.ts from the following TemplateFlow
+(https://www.templateflow.org) resources in the MNI152NLin6Asym space, 1 mm:
+
+  tpl-MNI152NLin6Asym_res-01_T1w.nii.gz                       FSL MNI152 T1 template
+  tpl-MNI152NLin6Asym_res-01_desc-brain_mask.nii.gz          brain mask
+  tpl-MNI152NLin6Asym_res-01_atlas-HOSPA_desc-th25_dseg.nii.gz  Harvard–Oxford subcortical, 25 % threshold
+  tpl-MNI152NLin6Asym_res-01_atlas-HOCPAL_desc-th0_dseg.nii.gz  Harvard–Oxford cortical, lateralised
+  tpl-MNI152NLin6Asym_res-01_atlas-Buckner2011_seg-7n_dseg.nii.gz Buckner 2011 cerebellum (mask only)
+
+Licences
+  The MNI152 template distributed with FSL and the Harvard–Oxford atlases are covered by the FSL
+  licence (https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence): free for non-commercial use. Commercial
+  use requires a licence from Oxford University Innovation.
+  Buckner et al. 2011 cerebellar atlas: cite Buckner RL et al., J Neurophysiol 106:2322–2345 (2011).
+
+Citations
+  Grabner G et al. (2006) Symmetric atlasing and model based segmentation. MICCAI.
+  Desikan RS et al. (2006) NeuroImage 31:968–980.  Makris N et al. (2006) Schizophr Res 83:155–171.
+  Frazier JA et al. (2005) Am J Psychiatry 162:1256–1265.  Goldstein JM et al. (2007) Biol Psychiatry 61:935–945.
+  Ciric R et al. (2022) TemplateFlow. Nat Methods 19:1568–1571.
+
+These are population-average data, not images of any individual patient.

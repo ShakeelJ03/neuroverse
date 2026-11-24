@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+.env*
+!.env.example
+# raw downloads used only by scripts/build-atlas.ts (re-download, see README)
+atlas-src/
+__pycache__/
+.venv/
+.DS_Store
+.claude/

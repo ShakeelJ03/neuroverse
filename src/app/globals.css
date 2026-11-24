@@ -1,0 +1,174 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-jb), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-display-sg), var(--font-inter), sans-serif;
+  --font-serif: var(--font-serif-fr), Georgia, serif;
+
+  --color-ink-950: #0a0a0b;
+  --color-ink-900: #0f0f10;
+  --color-ink-850: #141415;
+  --color-ink-800: #18181a;
+  --color-ink-700: #212123;
+  --color-ink-600: #2c2c2f;
+  --color-ink-500: #3b3b3f;
+  --color-ink-400: #56565c;
+  --color-ink-300: #7b7a80;
+  --color-ink-200: #a6a4a6;
+  --color-ink-100: #d1cfcc;
+  --color-ink-50: #edebe6;
+
+  --color-primary-accent: #e0895f; /* terracotta */
+  --color-secondary-accent: #a3b88f; /* sage */
+  --color-tertiary-accent: #8da3b5; /* slate */
+  --color-amber-accent: #e6b450;
+  --color-rose-accent: #dc6b6b;
+  --color-emerald-accent: #5dbb86;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--color-ink-950);
+  color: var(--color-ink-50);
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* glass panels */
+.glass {
+  background: linear-gradient(180deg, rgba(26, 25, 25, 0.78), rgba(16, 16, 17, 0.82));
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 18px 40px -18px rgba(0, 0, 0, 0.7);
+}
+
+.hairline {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #303033 transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: #303033;
+  border-radius: 6px;
+}
+
+.viewport-bg {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(90, 70, 55, 0.14), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 120%, rgba(224, 137, 95, 0.04), transparent 60%),
+    #0a0a0b;
+}
+
+.grid-overlay {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+}
+
+.label-chip {
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+input[type='range'].nv-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 18px;
+  background: transparent;
+  width: 100%;
+}
+input[type='range'].nv-range::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--color-primary-accent) var(--fill, 50%), #303033 var(--fill, 50%));
+}
+input[type='range'].nv-range::-moz-range-track {
+  height: 3px;
+  border-radius: 3px;
+  background: #303033;
+}
+input[type='range'].nv-range::-moz-range-progress {
+  height: 3px;
+  background: var(--color-primary-accent);
+}
+input[type='range'].nv-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: #edebe6;
+  border: 2px solid #0f0f10;
+  box-shadow: 0 0 0 1px rgba(224, 137, 95, 0.6);
+}
+input[type='range'].nv-range::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #edebe6;
+  border: 2px solid #0f0f10;
+}
+
+@keyframes nv-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fade-up {
+  animation: nv-fade-up 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes nv-scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+.scanbar {
+  animation: nv-scan 1.4s ease-in-out infinite;
+}
+
+.prose-nv p {
+  color: var(--color-ink-100);
+  line-height: 1.65;
+  font-size: 13.5px;
+}
+.prose-nv p + p {
+  margin-top: 0.6rem;
+}
+
+@keyframes nvprogress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
