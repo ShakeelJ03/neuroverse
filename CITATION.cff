@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use Neuroverse in teaching, research or your own project, please credit it as below."
+title: "Neuroverse: an interactive neuroanatomy and imaging simulation lab"
+type: software
+authors:
+  - family-names: "J"
+    given-names: "Shakeel"
+repository-code: "https://github.com/ShakeelJ03/neuroverse"
+url: "https://neuroverse-mu.vercel.app"
+license: MIT
+version: "1.0.0"
+date-released: "2026-11-24"
+keywords:
+  - neuroanatomy
+  - medical education
+  - MRI simulation
+  - 3D brain

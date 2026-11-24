@@ -4,3 +4,4 @@ atlas-src/
 node_modules/
 .claude/
 *.tsbuildinfo
+marketing/

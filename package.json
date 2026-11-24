@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Shakeel J",
+  "license": "MIT",
   "dependencies": {
     "@niivue/niivue": "^0.69.0",
     "@react-three/drei": "^10.7.9",

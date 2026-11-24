@@ -27,7 +27,7 @@ export function Sidebar() {
   const current = NAV.find((n) => (n.href === '/' ? path === '/' : path.startsWith(n.href)));
   const brand = (
     <div className="leading-none">
-      <div className="font-serif text-[19px] font-medium tracking-[-0.01em] text-ink-50">Neuroverse</div>
+      <div className="font-serif text-[19px] font-medium tracking-[-0.01em] text-ink-50">Neuroverse<sup className="ml-0.5 align-super text-[8px] font-normal text-ink-400">TM</sup></div>
       <div className="mt-1 text-[11px] italic text-ink-400">anatomy &amp; imaging lab</div>
     </div>
   );
@@ -109,6 +109,7 @@ export function Sidebar() {
           </Link>
         </p>
       </div>
+      <div className="mx-3 mb-3 text-[10.5px] leading-relaxed text-ink-500">© 2026 Shakeel J · Neuroverse™</div>
     </aside>
     </>
   );

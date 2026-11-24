@@ -1,6 +1,21 @@
-# NEUROVERSE
+<p align="center"><img src="src/app/icon.svg" width="88" alt="Neuroverse logo"></p>
+
+# Neuroverse™
 
 An interactive 3D brain anatomy, neurological disease and medical-imaging simulation laboratory. It is an educational tool, not a diagnostic one.
+
+**Live:** https://neuroverse-mu.vercel.app · Created by **Shakeel J**
+
+![Where's the lesion? case with reasoning, 3D lesion and simulated scan](marketing/screenshots/3-lesion-case.png)
+
+## Using or building on Neuroverse? Please give credit
+
+The code is open under the [MIT licence](LICENSE), which already requires you to keep the copyright notice. Beyond that, a visible credit is appreciated:
+
+- **In an app, site or fork:** "Based on Neuroverse by Shakeel J", linking to https://github.com/ShakeelJ03/neuroverse
+- **In teaching material, slides or papers:** cite it using [CITATION.cff](CITATION.cff) (GitHub's "Cite this repository" button gives the text).
+
+The name **Neuroverse™** and the logo are not covered by the MIT licence. Forks should use their own name and logo; see [TRADEMARKS.md](TRADEMARKS.md). The atlas files in `public/atlas/` are under the FSL licence (non-commercial use); see `public/atlas/NOTICE.txt`.
 
 ## Quick start
 
@@ -127,3 +142,7 @@ Downloaded from TemplateFlow (MNI152NLin6Asym, 1 mm): the FSL MNI152 T1 template
 - **No DICOM loader.** Convert DICOM with `dcm2niix` and open the NIfTI. Cornerstone3D and VTK.js are not integrated; Niivue covers real-volume viewing.
 - **Layout is designed for desktop screens of 1280 px or wider.** On narrow screens the side panels overlap the viewport.
 - **Performance:** in dev mode, first-time mesh and slice generation is slower than in production.
+
+## Licence
+
+Code: [MIT](LICENSE) © 2026 Shakeel J. Name and logo: trademarks of Shakeel J ([TRADEMARKS.md](TRADEMARKS.md)). Atlas data: FSL licence ([public/atlas/NOTICE.txt](public/atlas/NOTICE.txt)).

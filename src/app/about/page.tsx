@@ -38,7 +38,11 @@ export default function About() {
         <h2 className="mt-8 font-display text-[18px] text-ink-50">Other resources evaluated</h2>
         <p className="mt-1 text-ink-300">Not bundled. The table records what each would provide and the licence checks required before redistribution.</p>
         <Table rows={DATASETS} />
-        <p className="mt-6 text-[12px] text-ink-400">NEUROVERSE is an educational tool. It provides no medical advice and must not be used for diagnosis or treatment decisions.</p>
+        <p className="mt-6 text-[12px] text-ink-400">Neuroverse is an educational tool. It provides no medical advice and must not be used for diagnosis or treatment decisions.</p>
+        <p className="mt-3 text-[12px] text-ink-400">
+          Created by Shakeel J. Code under the MIT licence; Neuroverse™ and its logo are trademarks of the author. If you build on it, please credit “Based on Neuroverse by Shakeel J” with a link to{' '}
+          <a href="https://github.com/ShakeelJ03/neuroverse" target="_blank" rel="noreferrer" className="text-primary-accent hover:underline">the GitHub repository</a>.
+        </p>
       </div>
     </div>
   );
