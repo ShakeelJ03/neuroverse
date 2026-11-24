@@ -60,8 +60,8 @@ export function Dissection({ onExit }: { onExit: () => void }) {
         <h2 className="font-display text-[20px] text-ink-50">Take the brain apart</h2>
         <p className="text-[12px] text-ink-300">An exploded view, one system at a time. Drag to rotate, scroll to zoom, click any piece to read about it.</p>
       </div>
-      <div className="mt-3 grid min-h-[520px] flex-1 grid-cols-[1fr_380px] gap-3">
-        <Panel className="relative overflow-hidden">
+      <div className="mt-3 grid flex-1 grid-cols-1 gap-3 lg:min-h-[520px] lg:grid-cols-[1fr_380px]">
+        <Panel className="relative min-h-[440px] overflow-hidden lg:min-h-0">
           <BrainViewer
             pathology={pathology}
             splitSides
@@ -78,7 +78,7 @@ export function Dissection({ onExit }: { onExit: () => void }) {
               setPicked(s && STRUCTURE_BY_ID[s] ? s : null);
             }}
           />
-          <div className="absolute left-3 top-3 flex flex-col gap-1">
+          <div className="absolute left-3 top-3 hidden flex-col gap-1 lg:flex">
             {STAGES.map((s, i) => (
               <button
                 key={s.id}
@@ -93,7 +93,7 @@ export function Dissection({ onExit }: { onExit: () => void }) {
               </button>
             ))}
           </div>
-          <div className="glass absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-xl px-3 py-2">
+          <div className="glass absolute bottom-3 left-1/2 flex w-max max-w-[calc(100%-1rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-xl px-3 py-2">
             <Button size="sm" onClick={() => go(-1)} disabled={stage === 0} title="Previous step"><ChevronLeft className="h-3.5 w-3.5" /></Button>
             <Button size="sm" onClick={() => setPlaying((p) => !p)} title={playing ? 'Pause' : 'Play the lesson'}>
               {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />} {playing ? 'Pause' : 'Play'}

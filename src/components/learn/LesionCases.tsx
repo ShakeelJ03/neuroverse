@@ -2,13 +2,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { Check, Eye, Lightbulb, MapPin, RotateCcw } from 'lucide-react';
+import { Check, Eye, Lightbulb, Link2, MapPin, RotateCcw } from 'lucide-react';
 import { BrainViewer, RenderMode } from '@/components/brain/BrainViewer';
 import { ModalityPane, PaneOpts } from '@/components/imaging/ModalityPane';
 import { Badge, Button, Panel, Segmented } from '@/components/ui';
 import { LESION_CASES, LesionCase, casePathology } from '@/data/lesionCases';
 import { MESH_TO_STRUCTURE, STRUCTURE_BY_ID } from '@/data/structures';
 import { DISEASE_BY_ID } from '@/data/diseases';
+import { ref } from '@/data/references';
 import { useProgress } from '@/store/progress';
 import type { Axis } from '@/lib/imaging/slice';
 import type { V3 } from '@/lib/anatomy/sdf';
@@ -20,23 +21,43 @@ const AXIS_INDEX: Record<Axis, number> = { sagittal: 0, axial: 1, coronal: 2 };
 export function LesionCases({ onExit }: { onExit: () => void }) {
   const { casesStudied, markStudied } = useProgress();
   const [caseId, setCaseId] = useState(LESION_CASES[0].id);
+  const [copied, setCopied] = useState(false);
+  // deep links: /learn?lesson=cases&case=<id>
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('case');
+    if (id && LESION_CASES.some((x) => x.id === id)) setCaseId(id);
+  }, []);
+  const pick = (id: string) => {
+    setCaseId(id);
+    setCopied(false);
+    window.history.replaceState(null, '', `/learn?lesson=cases&case=${id}`);
+  };
+  const copyLink = () => {
+    const url = `${window.location.origin}/learn?lesson=cases&case=${caseId}`;
+    navigator.clipboard?.writeText(url).then(() => setCopied(true), () => undefined);
+  };
   const c = LESION_CASES.find((x) => x.id === caseId)!;
   return (
     <div className="flex h-full flex-col">
       <button onClick={onExit} className="self-start text-[12px] text-ink-400 hover:text-ink-100">← All activities</button>
-      <div className="mt-2">
-        <h2 className="font-display text-[20px] text-ink-50">Where’s the lesion?</h2>
-        <p className="text-[12px] text-ink-300">Read the story, decide where one lesion would explain everything, then reveal the reasoning and the scan.</p>
+      <div className="mt-2 flex flex-wrap items-end gap-x-4 gap-y-1">
+        <div className="min-w-0 flex-1">
+          <h2 className="font-display text-[20px] text-ink-50">Where’s the lesion?</h2>
+          <p className="text-[12px] text-ink-300">Read the story, decide where one lesion would explain everything, then reveal the reasoning and the scan.</p>
+        </div>
+        <button onClick={copyLink} className="inline-flex items-center gap-1 text-[11.5px] text-ink-400 hover:text-ink-100" title="Copy a link that opens this case">
+          <Link2 className="h-3.5 w-3.5" /> {copied ? 'Link copied' : 'Copy link to this case'}
+        </button>
       </div>
-      <div className="mt-3 grid min-h-[540px] flex-1 grid-cols-[210px_1fr_390px] gap-3">
-        <Panel className="scroll-thin overflow-y-auto p-2">
+      <div className="mt-3 grid flex-1 grid-cols-1 gap-3 lg:min-h-[540px] lg:grid-cols-[210px_1fr_390px]">
+        <Panel className="scroll-thin max-h-48 overflow-y-auto p-2 lg:max-h-none">
           {([1, 2, 3] as const).map((lvl) => (
             <div key={lvl} className="mb-2">
               <div className="label-chip px-2 py-1.5 text-ink-400">{LEVEL_NAME[lvl]}</div>
               {LESION_CASES.filter((x) => x.level === lvl).map((x) => (
                 <button
                   key={x.id}
-                  onClick={() => setCaseId(x.id)}
+                  onClick={() => pick(x.id)}
                   className={clsx('flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left text-[12px] transition-colors', x.id === caseId ? 'bg-primary-accent/12 text-primary-accent' : 'text-ink-200 hover:bg-white/[0.03] hover:text-ink-50')}
                 >
                   <span className="mt-0.5 w-3 shrink-0">{casesStudied.includes(x.id) && <Check className="h-3 w-3 text-emerald-accent" />}</span>
@@ -106,7 +127,7 @@ function CaseView({ c, onRevealed }: { c: LesionCase; onRevealed: () => void }) 
           </div>
         </Panel>
         {revealed && (
-          <div className="h-[300px]">
+          <div className="h-[300px] max-lg:h-[340px]">
             <ModalityPane
               axis={c.scan.axis}
               cross={cross}
@@ -136,7 +157,7 @@ function CaseView({ c, onRevealed }: { c: LesionCase; onRevealed: () => void }) 
           <div className="mt-5 rounded-lg border border-primary-accent/25 bg-primary-accent/5 p-3">
             <div className="flex items-center gap-1.5 text-[12.5px] font-medium text-ink-50"><Lightbulb className="h-4 w-4 text-primary-accent" /> Think first</div>
             <p className="mt-1 text-[12px] text-ink-300">Which side? Cortex, deep structures or brainstem? What single place explains every finding?</p>
-            {mark && <p className="mt-2 text-[12px] text-amber-accent">Your mark: {markedName}</p>}
+            {mark && <p className="mt-2 text-[12px] text-amber-accent">Mark placed{Math.abs(mark.p[0]) > 4 ? ` on the ${mark.p[0] < 0 ? 'left' : 'right'} side` : ''}. Click again to move it.</p>}
             <Button size="sm" className="mt-3" onClick={() => setRevealed(true)}><Eye className="h-3.5 w-3.5" /> Reveal the reasoning</Button>
           </div>
         ) : (
@@ -172,6 +193,17 @@ function CaseView({ c, onRevealed }: { c: LesionCase; onRevealed: () => void }) 
               )}
               <button onClick={() => { setRevealed(false); setMark(null); setStep(null); }} className="ml-auto inline-flex items-center gap-1 text-[11.5px] text-ink-400 hover:text-ink-100"><RotateCcw className="h-3 w-3" /> Start this case again</button>
             </div>
+            <div className="label-chip mt-4 pb-1 text-ink-400">Sources</div>
+            <ul className="space-y-1">
+              {c.refs.map((id) => {
+                const r = ref(id);
+                return (
+                  <li key={id} className="text-[11px] leading-snug text-ink-300">
+                    <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary-accent hover:underline">{r.cite}</a>
+                  </li>
+                );
+              })}
+            </ul>
             <p className="mt-4 text-[10.5px] text-ink-500">Teaching vignette, not a real patient. The scan is a physics-based simulation.</p>
           </div>
         )}

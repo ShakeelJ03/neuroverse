@@ -25,7 +25,7 @@ export function Learn() {
 
   if (mode.kind === 'explode' || mode.kind === 'cases')
     return (
-      <div className="h-full overflow-hidden px-6 py-4">
+      <div className="scroll-thin h-full overflow-y-auto px-3 py-3 lg:overflow-hidden lg:px-6 lg:py-4">
         {mode.kind === 'explode' ? <Dissection onExit={() => setMode({ kind: 'home' })} /> : <LesionCases onExit={() => setMode({ kind: 'home' })} />}
       </div>
     );
@@ -36,7 +36,7 @@ export function Learn() {
 
   return (
     <div className="scroll-thin h-full overflow-y-auto">
-      <div className="mx-auto max-w-[1300px] px-8 py-7">
+      <div className="mx-auto max-w-[1300px] px-4 py-5 lg:px-8 lg:py-7">
         <div className="label-chip text-ink-400">Learning laboratory</div>
         <h1 className="mt-1 font-display text-[28px] font-semibold tracking-tight text-ink-50">Learn by exploring</h1>
         <p className="mt-1 text-[13px] text-ink-300">Interactive lessons with explanations at every step. Nothing is graded.</p>

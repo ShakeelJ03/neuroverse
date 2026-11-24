@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
 import {
-  ChevronRight, Eye, EyeOff, Focus, Layers, Maximize2, RotateCcw, Scissors, Search, Tag, X, Box, Sparkles, Rotate3d, Boxes,
+  ChevronRight, Eye, ListTree, EyeOff, Focus, Layers, Maximize2, RotateCcw, Scissors, Search, Tag, X, Box, Sparkles, Rotate3d, Boxes,
 } from 'lucide-react';
 import Link from 'next/link';
 import { BrainViewer, BrainViewerHandle, ClipState, RenderMode, ViewPreset } from './BrainViewer';
@@ -12,6 +12,7 @@ import { AnatomyProvenance } from './AnatomyProvenance';
 import { emptyPathology } from '@/lib/anatomy/model';
 import { MESH_TO_STRUCTURE, STRUCTURES, STRUCTURE_BY_ID, TREE } from '@/data/structures';
 import { Button, Panel, Provenance, Segmented, Slider, Kbd } from '@/components/ui';
+import { useWide } from '@/lib/useWide';
 
 const HEALTHY = emptyPathology();
 const VIEW_BUTTONS: { v: ViewPreset; label: string }[] = [
@@ -39,6 +40,15 @@ export function Explorer() {
   const [query, setQuery] = useState('');
   const [autoRotate, setAutoRotate] = useState(false);
   const [showWM, setShowWM] = useState(false);
+  const [treeOpen, setTreeOpen] = useState(false); // small screens only
+  const wide = useWide();
+  const [vh, setVh] = useState(800);
+  useEffect(() => {
+    const on = () => setVh(window.innerHeight);
+    on();
+    window.addEventListener('resize', on);
+    return () => window.removeEventListener('resize', on);
+  }, []);
   const [initialFocus] = useState<string[] | null>(() => {
     const s0 = params.get('s');
     return s0 && STRUCTURE_BY_ID[s0] ? STRUCTURE_BY_ID[s0].meshes : null;
@@ -57,6 +67,7 @@ export function Explorer() {
   }, [params]);
 
   const select = (id: string | null, focus = false) => {
+    setTreeOpen(false);
     setSelectedId(id);
     const url = id ? `/?s=${id}` : '/';
     router.replace(url, { scroll: false });
@@ -120,6 +131,8 @@ export function Explorer() {
         autoRotate={autoRotate}
         showWhiteMatter={showWM}
         autoFocus={initialFocus}
+        inset={wide ? { left: 296, right: 396 } : { bottom: selectedId ? vh * 0.46 + 60 : 60 }}
+        distanceScale={wide ? 1.12 : 1.25}
         onSelectMesh={(m) => {
           if (!m) return;
           const sid = MESH_TO_STRUCTURE[m];
@@ -128,7 +141,7 @@ export function Explorer() {
       />
 
       {/* header */}
-      <div className="pointer-events-none absolute left-[300px] right-[400px] top-4 flex items-start justify-center">
+      <div className="pointer-events-none absolute left-[300px] right-[400px] top-4 hidden items-start justify-center lg:flex">
         <div className="pointer-events-auto flex items-center gap-2 rounded-full border hairline bg-ink-900/70 px-3 py-1.5 backdrop-blur">
           <span className="font-display text-[13px] font-medium text-ink-50">Brain Explorer</span>
           <span className="h-3 w-px bg-white/10" />
@@ -137,7 +150,7 @@ export function Explorer() {
       </div>
 
       {/* structure tree */}
-      <Panel className="absolute bottom-20 left-4 top-4 flex w-[280px] flex-col overflow-hidden">
+      <Panel className={clsx('absolute inset-x-2 bottom-[104px] top-2 z-10 flex-col overflow-hidden lg:inset-x-auto lg:bottom-20 lg:left-4 lg:top-4 lg:flex lg:w-[280px]', treeOpen ? 'flex' : 'hidden')}>
         <div className="border-b hairline p-3">
           <div className="label-chip mb-2 text-ink-300">Anatomical hierarchy</div>
           <div className="flex items-center gap-2 rounded-lg border hairline bg-ink-900/70 px-2.5 py-1.5">
@@ -178,7 +191,7 @@ export function Explorer() {
       </Panel>
 
       {/* info panel */}
-      <Panel className="absolute bottom-20 right-4 top-4 flex w-[380px] flex-col overflow-hidden">
+      <Panel className={clsx('absolute inset-x-2 bottom-[104px] h-[46%] flex-col overflow-hidden lg:inset-x-auto lg:bottom-20 lg:right-4 lg:top-4 lg:flex lg:h-auto lg:w-[380px]', selected && !treeOpen ? 'flex' : 'hidden')}>
         {selected ? (
           <>
             <div className="flex items-center justify-between border-b hairline px-4 py-2.5">
@@ -225,8 +238,14 @@ export function Explorer() {
       </Panel>
 
       {/* toolbar */}
-      <div className="absolute bottom-4 left-4 right-4 flex justify-center">
-        <Panel className="flex flex-wrap items-center gap-2 px-2.5 py-2">
+      <div className="absolute bottom-2 left-2 right-2 flex justify-center lg:bottom-4 lg:left-4 lg:right-4">
+        <Panel className="flex flex-wrap items-center justify-center gap-2 px-2.5 py-2">
+          <span className="contents lg:hidden">
+            <Button size="sm" active={treeOpen} onClick={() => setTreeOpen((o) => !o)}>
+              <ListTree className="h-3.5 w-3.5" /> Structures
+            </Button>
+          </span>
+          <span className="hidden lg:contents">
           <Segmented size="sm" value={'' as ViewPreset} options={VIEW_BUTTONS.map((b) => ({ value: b.v, label: b.label }))} onChange={(v) => {
             if (v === 'medial') {
               // medial surface of the left hemisphere: section at the midline, view from the right
@@ -236,7 +255,8 @@ export function Explorer() {
             }
             viewer.current?.setView(v);
           }} />
-          <span className="h-5 w-px bg-white/10" />
+          </span>
+          <span className="hidden h-5 w-px bg-white/10 sm:block" />
           <Segmented<RenderMode>
             size="sm"
             value={mode}
@@ -247,12 +267,12 @@ export function Explorer() {
               { value: 'xray', label: <span className="inline-flex items-center gap-1"><Box className="h-3 w-3" />X-ray</span>, title: 'Translucent cortex reveals deep structures' },
             ]}
           />
-          <span className="h-5 w-px bg-white/10" />
+          <span className="hidden h-5 w-px bg-white/10 sm:block" />
           <Button size="sm" active={labels} onClick={() => setLabels((l) => !l)}>
-            <Tag className="h-3.5 w-3.5" /> Labels
+            <Tag className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Labels</span>
           </Button>
           <Button size="sm" active={clip.enabled} onClick={() => setClip((c) => ({ ...c, enabled: !c.enabled }))}>
-            <Scissors className="h-3.5 w-3.5" /> Section
+            <Scissors className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Section</span>
           </Button>
           {clip.enabled && (
             <div className="flex items-center gap-2">
@@ -275,19 +295,19 @@ export function Explorer() {
               </Button>
             </div>
           )}
-          <span className="h-5 w-px bg-white/10" />
+          <span className="hidden h-5 w-px bg-white/10 sm:block" />
           <Button size="sm" active={autoRotate} onClick={() => setAutoRotate((a) => !a)} title="Auto-rotate">
             <Rotate3d className="h-3.5 w-3.5" />
           </Button>
           <Button size="sm" onClick={resetAll} title="Return to full-brain view">
-            <RotateCcw className="h-3.5 w-3.5" /> Reset
+            <RotateCcw className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Reset</span>
           </Button>
           <Link href="/learn?lesson=explode" title="Exploded-view lesson: take the brain apart step by step" className="inline-flex h-7 items-center gap-1.5 rounded-lg border border-primary-accent/30 bg-primary-accent/5 px-2.5 text-[12px] font-medium text-primary-accent hover:bg-primary-accent/10">
             <Boxes className="h-3.5 w-3.5" /> Take apart
           </Link>
         </Panel>
       </div>
-      <div className="pointer-events-none absolute bottom-[78px] left-1/2 -translate-x-1/2 text-[10.5px] text-ink-400">
+      <div className="pointer-events-none absolute bottom-[78px] left-1/2 hidden -translate-x-1/2 text-[10.5px] text-ink-400 lg:block">
         <Kbd>drag</Kbd> rotate · <Kbd>right-drag</Kbd> pan · <Kbd>scroll</Kbd> zoom · <Kbd>click</Kbd> select
       </div>
     </div>

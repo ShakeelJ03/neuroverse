@@ -57,6 +57,8 @@ export interface BrainViewerProps {
   splitSides?: boolean;
   /** multiply the default camera distance (e.g. 1.4 to fit an exploded view) */
   distanceScale?: number;
+  /** pixels covered by overlay panels; the view is re-centred in the space between them */
+  inset?: { left?: number; right?: number; top?: number; bottom?: number };
 }
 
 /** Meshes that cross the midline as one piece and are never split into halves. */
@@ -281,6 +283,29 @@ function Labels({ geoms, hidden, isolate, selected = [] }: BrainViewerProps & { 
   );
 }
 
+/** On tall, narrow screens the width is the limit, so pull the camera back to keep the same horizontal field. */
+function narrow(c: CameraControlsImpl) {
+  const cam = c.camera as THREE.PerspectiveCamera;
+  return Math.max(1, 0.95 / (cam.aspect || 1));
+}
+
+function ViewInset({ left = 0, right = 0, top = 0, bottom = 0 }: { left?: number; right?: number; top?: number; bottom?: number }) {
+  const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
+  const size = useThree((s) => s.size);
+  useEffect(() => {
+    const dx = (left - right) / 2;
+    const dy = (bottom - top) / 2;
+    if (dx || dy) camera.setViewOffset(size.width, size.height, -dx, dy, size.width, size.height);
+    else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
+    return () => {
+      camera.clearViewOffset();
+      camera.updateProjectionMatrix();
+    };
+  }, [camera, size.width, size.height, left, right, top, bottom]);
+  return null;
+}
+
 function ControlsBridge({ controls, initial, autoRotate, dist = CAMERA_DIST }: { controls: React.RefObject<CameraControlsImpl | null>; initial: ViewPreset; autoRotate?: boolean; dist?: number }) {
   useEffect(() => {
     const c = controls.current;
@@ -349,7 +374,7 @@ export const BrainViewer = forwardRef<BrainViewerHandle, BrainViewerProps>(funct
         const s = geoms.get(focus)!.boundingSphere!;
         target = s.center.clone();
         target.z = -target.z;
-        dist = Math.max(90, s.radius * 3.2);
+        dist = Math.max(300, s.radius * 3.2) * narrow(c);
       }
       c.setLookAt(target.x + d[0] * dist, target.y + d[1] * dist, target.z + d[2] * dist, target.x, target.y, target.z, true);
     },
@@ -369,7 +394,7 @@ export const BrainViewer = forwardRef<BrainViewerHandle, BrainViewerProps>(funct
       const tgt = new THREE.Vector3();
       c.getTarget(tgt);
       const dir = pos.sub(tgt).normalize();
-      const dist = Math.max(70, sphere.radius * 3.4);
+      const dist = Math.max(300, sphere.radius * 3.4) * narrow(c); // keep the whole head in view so the structure is seen in context
       const p = sphere.center.clone().add(dir.multiplyScalar(dist));
       c.setLookAt(p.x, p.y, p.z, sphere.center.x, sphere.center.y, sphere.center.z, true);
     },
@@ -399,6 +424,7 @@ export const BrainViewer = forwardRef<BrainViewerHandle, BrainViewerProps>(funct
         </Environment>
         <CameraControls ref={controls} makeDefault minDistance={40} maxDistance={900} smoothTime={0.35} draggingSmoothTime={0.08} />
         <ControlsBridge controls={controls} initial={props.initialView ?? 'oblique'} autoRotate={props.autoRotate} dist={CAMERA_DIST * (props.distanceScale ?? 1)} />
+        {props.inset && <ViewInset {...props.inset} />}
         {geoms && <Scene {...props} controls={controls} geoms={geoms} />}
       </Canvas>
       {!geoms && !error && (

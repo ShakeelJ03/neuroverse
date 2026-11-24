@@ -139,6 +139,14 @@ const R: Reference[] = [
   { id: 'barkovich2012', kind: 'paper', cite: 'Barkovich AJ, et al. A developmental and genetic classification for malformations of cortical development: update 2012. Brain. 2012;135(5):1348–1369.', url: pm('A developmental and genetic classification for malformations of cortical development: update 2012') },
   { id: 'ashwal2009', kind: 'guideline', cite: 'Ashwal S, et al. Practice parameter: evaluation of the child with microcephaly (an evidence-based review). Neurology. 2009;73(11):887–897.', url: pm('Practice parameter: Evaluation of the child with microcephaly') },
   { id: 'rasmussen2016', kind: 'paper', cite: 'Rasmussen SA, et al. Zika virus and birth defects — reviewing the evidence for causality. N Engl J Med. 2016;374(20):1981–1987.', url: pm('Zika Virus and Birth Defects--Reviewing the Evidence for Causality') },
+  // ── Lesion localisation cases ──
+  { id: 'bamford1991', kind: 'paper', cite: 'Bamford J, et al. Classification and natural history of clinically identifiable subtypes of cerebral infarction. Lancet. 1991;337(8756):1521–1526.', url: pm('Classification and natural history of clinically identifiable subtypes of cerebral infarction') },
+  { id: 'mohr1978', kind: 'paper', cite: 'Mohr JP, et al. Broca aphasia: pathologic and clinical. Neurology. 1978;28(4):311–324.', url: pm('Broca aphasia: pathologic and clinical') },
+  { id: 'zhang2006', kind: 'paper', cite: 'Zhang X, et al. Homonymous hemianopias: clinical-anatomic correlations in 904 cases. Neurology. 2006;66(6):906–910.', url: pm('Homonymous hemianopias: clinical-anatomic correlations in 904 cases') },
+  { id: 'fisher1982', kind: 'paper', cite: 'Fisher CM. Lacunar strokes and infarcts: a review. Neurology. 1982;32(8):871–876.', url: pm('Fisher Lacunar strokes and infarcts: a review') },
+  { id: 'vallar1986', kind: 'paper', cite: 'Vallar G, Perani D. The anatomy of unilateral neglect after right-hemisphere stroke lesions. Neuropsychologia. 1986;24(5):609–622.', url: pm('The anatomy of unilateral neglect after right-hemisphere stroke lesions') },
+  { id: 'edlow2008', kind: 'paper', cite: 'Edlow JA, Newman-Toker DE, Savitz SI. Diagnosis and initial management of cerebellar infarction. Lancet Neurol. 2008;7(10):951–964.', url: pm('Diagnosis and initial management of cerebellar infarction') },
+  { id: 'kim2003', kind: 'paper', cite: 'Kim JS. Pure lateral medullary infarction: clinical-radiological correlation of 130 acute, consecutive patients. Brain. 2003;126(8):1864–1872.', url: pm('Pure lateral medullary infarction: clinical-radiological correlation of 130 acute, consecutive patients') },
 ];
 
 export const REFERENCES: Record<string, Reference> = Object.fromEntries(R.map((r) => [r.id, r]));

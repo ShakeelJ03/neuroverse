@@ -38,6 +38,8 @@ export interface LesionCase {
   disease?: string;
   /** 3D view that shows the lesion best */
   view: 'left' | 'right' | 'superior' | 'posterior' | 'inferior' | 'medial' | 'oblique';
+  /** reference ids from data/references */
+  refs: string[];
 }
 
 export const LESION_CASES: LesionCase[] = [
@@ -60,6 +62,7 @@ export const LESION_CASES: LesionCase[] = [
     scan: { seq: 'DWI', axis: 'axial', why: 'Diffusion-weighted MRI shows an acute infarct as bright within minutes to hours.' },
     disease: 'ischaemic-stroke',
     view: 'left',
+    refs: ['mohr1978', 'bamford1991', 'powers2019'],
   },
   {
     id: 'pca',
@@ -79,6 +82,7 @@ export const LESION_CASES: LesionCase[] = [
     scan: { seq: 'DWI', axis: 'axial', why: 'Diffusion restriction along the left calcarine cortex.' },
     disease: 'ischaemic-stroke',
     view: 'medial',
+    refs: ['zhang2006', 'bamford1991'],
   },
   {
     id: 'lacune',
@@ -99,6 +103,7 @@ export const LESION_CASES: LesionCase[] = [
     scan: { seq: 'DWI', axis: 'axial', why: 'A small bright dot in the posterior limb of the right internal capsule.' },
     disease: 'svd',
     view: 'oblique',
+    refs: ['fisher1982', 'bamford1991', 'wardlaw2013'],
   },
   {
     id: 'wernicke',
@@ -119,6 +124,7 @@ export const LESION_CASES: LesionCase[] = [
     scan: { seq: 'DWI', axis: 'axial', why: 'Acute infarct in the left posterior temporal lobe.' },
     disease: 'ischaemic-stroke',
     view: 'left',
+    refs: ['hickok2007', 'bamford1991'],
   },
   {
     id: 'neglect',
@@ -138,6 +144,7 @@ export const LESION_CASES: LesionCase[] = [
     scan: { seq: 'DWI', axis: 'axial', why: 'Acute infarct in the right parietal lobe.' },
     disease: 'ischaemic-stroke',
     view: 'right',
+    refs: ['vallar1986', 'bamford1991'],
   },
   {
     id: 'cerebellar',
@@ -157,6 +164,7 @@ export const LESION_CASES: LesionCase[] = [
     scan: { seq: 'DWI', axis: 'axial', why: 'Acute infarct in the right cerebellar hemisphere.' },
     disease: 'ischaemic-stroke',
     view: 'posterior',
+    refs: ['edlow2008'],
   },
   {
     id: 'wallenberg',
@@ -178,6 +186,7 @@ export const LESION_CASES: LesionCase[] = [
     scan: { seq: 'DWI', axis: 'axial', why: 'A small infarct in the left lateral medulla; these are easy to miss early.' },
     disease: 'ischaemic-stroke',
     view: 'inferior',
+    refs: ['kim2003'],
   },
   {
     id: 'hsv',
@@ -185,18 +194,19 @@ export const LESION_CASES: LesionCase[] = [
     level: 3,
     presentation: 'A 35-year-old woman has two days of fever and headache, then becomes confused and has a seizure. She reports strange smells.',
     findings: ['Fever and reduced consciousness', 'Cannot form new memories', 'Olfactory hallucinations before a seizure', 'Mild word-finding difficulty'],
-    answer: 'Left medial temporal lobe: hippocampus, amygdala and insula (herpes simplex encephalitis)',
+    answer: 'Left medial temporal lobe (hippocampus and amygdala), often spreading to the insula; herpes simplex encephalitis, frequently on both sides but asymmetric',
     structures: ['hippocampus', 'amygdala', 'temporal-lobe', 'insular-cortex'],
     steps: [
-      { clue: 'Cannot form new memories', means: 'The hippocampus in the medial temporal lobe is needed to lay down new episodic memories.', structures: ['hippocampus'] },
+      { clue: 'Cannot form new memories', means: 'The hippocampus in the medial temporal lobe is needed to lay down new episodic memories. A dense amnesia like this usually means both hippocampi are affected; one side alone gives milder, material-specific loss (verbal for the left).', structures: ['hippocampus'] },
       { clue: 'Strange smells before a seizure', means: 'Olfactory auras come from the medial temporal lobe (amygdala and uncus), close to the primary olfactory cortex.', structures: ['amygdala'] },
       { clue: 'Fever and a subacute course', means: 'Infection rather than a stroke. Herpes simplex virus has a striking preference for the medial temporal lobes and insula.', structures: ['temporal-lobe', 'insular-cortex'] },
     ],
-    pearl: 'Fever + confusion + temporal lobe features = treat for herpes encephalitis immediately, before the scan.',
+    pearl: 'Fever + confusion + temporal lobe features = start aciclovir for herpes encephalitis immediately, before the scan and lumbar puncture results.',
     lesion: { kind: 'inflammation', center: [-30, -22, -8], radii: [12, 13, 20], stage: 0.3 },
     scan: { seq: 'FLAIR', axis: 'coronal', why: 'FLAIR shows swelling and bright signal in the left medial temporal lobe.' },
     disease: 'viral-encephalitis',
     view: 'left',
+    refs: ['tunkel2008'],
   },
 ];
 

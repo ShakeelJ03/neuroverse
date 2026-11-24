@@ -1,8 +1,9 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LogoMark } from './Logo';
-import { Activity, BookOpenCheck, Brain, Dna, GitBranch, Library, ScanLine, Info } from 'lucide-react';
+import { Activity, BookOpenCheck, Brain, Dna, GitBranch, Library, Menu, ScanLine, Info, X } from 'lucide-react';
 import clsx from 'clsx';
 import { useSettings } from '@/store/settings';
 import { Segmented } from '@/components/ui';
@@ -21,14 +22,39 @@ export function Sidebar() {
   const path = usePathname();
   const source = useSettings((s) => s.anatomySource);
   const setSource = useSettings((s) => s.setAnatomySource);
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(false), [path]);
+  const current = NAV.find((n) => (n.href === '/' ? path === '/' : path.startsWith(n.href)));
+  const brand = (
+    <div className="leading-none">
+      <div className="font-serif text-[19px] font-medium tracking-[-0.01em] text-ink-50">Neuroverse</div>
+      <div className="mt-1 text-[11px] italic text-ink-400">anatomy &amp; imaging lab</div>
+    </div>
+  );
   return (
-    <aside className="relative z-20 flex w-[232px] shrink-0 flex-col border-r hairline bg-ink-900/95">
+    <>
+    {/* small screens: top bar + slide-out menu */}
+    <header className="relative z-30 flex shrink-0 items-center gap-2.5 border-b hairline bg-ink-900/95 px-3 py-2 lg:hidden">
+      <button onClick={() => setOpen(true)} className="grid h-9 w-9 place-items-center rounded-lg text-ink-100 hover:bg-white/5" aria-label="Open menu">
+        <Menu className="h-5 w-5" />
+      </button>
+      <LogoMark size={28} className="shrink-0" />
+      {brand}
+      {current && <span className="ml-auto truncate text-[12px] text-ink-300">{current.label}</span>}
+    </header>
+    {open && <div className="fixed inset-0 z-40 bg-black/60 lg:hidden" onClick={() => setOpen(false)} />}
+    <aside
+      className={clsx(
+        'z-50 w-[232px] shrink-0 flex-col overflow-y-auto border-r hairline bg-ink-900 lg:relative lg:z-20 lg:flex lg:bg-ink-900/95',
+        open ? 'fixed inset-y-0 left-0 flex' : 'hidden',
+      )}
+    >
       <div className="flex items-center gap-2.5 px-5 pt-5 pb-6">
         <LogoMark size={34} className="shrink-0" />
-        <div className="leading-none">
-          <div className="font-serif text-[19px] font-medium tracking-[-0.01em] text-ink-50">Neuroverse</div>
-          <div className="mt-1 text-[11px] italic text-ink-400">anatomy &amp; imaging lab</div>
-        </div>
+        {brand}
+        <button onClick={() => setOpen(false)} className="ml-auto grid h-8 w-8 place-items-center rounded-lg text-ink-300 hover:bg-white/5 lg:hidden" aria-label="Close menu">
+          <X className="h-4 w-4" />
+        </button>
       </div>
       <nav className="flex-1 space-y-0.5 px-2.5">
         <div className="label-chip px-2.5 pb-2 text-ink-400">Workspace</div>
@@ -84,5 +110,6 @@ export function Sidebar() {
         </p>
       </div>
     </aside>
+    </>
   );
 }
